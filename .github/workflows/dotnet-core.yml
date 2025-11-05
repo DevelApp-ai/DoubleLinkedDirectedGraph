@@ -2,9 +2,14 @@ name: .NET Core
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
 
 jobs:
   build:
@@ -33,7 +38,7 @@ jobs:
         path: '**/test-results.trx'
         reporter: dotnet-trx
     - name: Publish NuGet Package
-      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
           PROJECT_FILE_PATH: DoubleLinkedDirectedGraph/DoubleLinkedDirectedGraph.csproj
