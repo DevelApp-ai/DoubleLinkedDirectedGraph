@@ -13,9 +13,9 @@ namespace DoubleLinkedDirectedGraph
     {
         #region private
 
-        public static readonly string START_NODE_KEY = "START";
-        public static readonly string END_NODE_KEY = "END";
-        private Dictionary<string, Node> nodes = new Dictionary<string, Node>();
+        public const string START_NODE_KEY = "START";
+        public const string END_NODE_KEY = "END";
+        private readonly Dictionary<string, Node> nodes = new Dictionary<string, Node>();
         private bool graphLocked = false;
         private Node _startNode;
         private Node _endNode;
@@ -54,19 +54,22 @@ namespace DoubleLinkedDirectedGraph
             {
                 return nodes[correctedNodeKey];
             }
-            else if (previousNode.NextEdges.Any(e => e.Value.ToNode.NodeKey.Equals(correctedNodeKey)) && ActiveOptions.TreatNodeKeysAsOnlyLocallyUnique && previousNode != null)
+            else if (ActiveOptions.TreatNodeKeysAsOnlyLocallyUnique && previousNode != null)
             {
-                return previousNode.NextEdges.Single(e1 => e1.Value.ToNode.NodeKey.Equals(correctedNodeKey)).Value.ToNode;
-            }
-            else
-            {
-                Node node = new Node(this, correctedNodeKey);
-                if (!ActiveOptions.TreatNodeKeysAsOnlyLocallyUnique)
+                var existingEdge = previousNode.NextEdges.Values.FirstOrDefault(e => e.ToNode.NodeKey.Equals(correctedNodeKey));
+                if (existingEdge != null)
                 {
-                    nodes.Add(node.NodeKey, node);
+                    return existingEdge.ToNode;
                 }
-                return node;
             }
+            
+            // Create new node
+            Node node = new Node(this, correctedNodeKey);
+            if (!ActiveOptions.TreatNodeKeysAsOnlyLocallyUnique)
+            {
+                nodes.Add(node.NodeKey, node);
+            }
+            return node;
         }
 
         /// <summary>
@@ -131,15 +134,19 @@ namespace DoubleLinkedDirectedGraph
         {
             if (string.IsNullOrWhiteSpace(nodeKey))
             {
-                return Guid.NewGuid().ToString().Replace("-", "");
+                return Guid.NewGuid().ToString("N");
             }
-            else
+            
+            // Only process if needed
+            if (nodeKey.IndexOfAny(new[] { ' ', '-', '_' }) >= 0)
             {
-                return nodeKey.Replace(" ", "").Replace("-", "").Replace("_", "").Trim();
+                return nodeKey.Replace(" ", "").Replace("-", "").Replace("_", "");
             }
+            
+            return nodeKey;
         }
 
-        private Options ActiveOptions { get; set; }
+        private Options ActiveOptions { get; }
 
         #endregion
         #region public
@@ -378,10 +385,8 @@ namespace DoubleLinkedDirectedGraph
                 {
                     return edge.ToNode;
                 }
-                else
-                {
-                    throw new DoubleLinkedDirectedGraphException($"Cannot walk edge {edgeKey} because it does not exist");
-                }
+                
+                throw new DoubleLinkedDirectedGraphException($"Cannot walk edge {edgeKey} because it does not exist");
             }
 
             /// <summary>
@@ -397,10 +402,8 @@ namespace DoubleLinkedDirectedGraph
                     edgeData = edge.EdgeData;
                     return edge.ToNode;
                 }
-                else
-                {
-                    throw new DoubleLinkedDirectedGraphException($"Cannot walk edge {edgeKey} because it does not exist");
-                }
+                
+                throw new DoubleLinkedDirectedGraphException($"Cannot walk edge {edgeKey} because it does not exist");
             }
 
             /// <summary>

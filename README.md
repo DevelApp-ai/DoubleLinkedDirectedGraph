@@ -1,7 +1,8 @@
 # DoubleLinkedDirectedGraph
-![Nuget](https://img.shields.io/nuget/v/DoubleLinkedDirectedGraph)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DevelApp-dk/DoubleLinkedDirectedGraph/.NET%20Core)
-![GitHub](https://img.shields.io/github/license/DevelApp-dk/DoubleLinkedDirectedGraph)
+
+[![NuGet Version](https://img.shields.io/nuget/v/DoubleLinkedDirectedGraph)](https://www.nuget.org/packages/DoubleLinkedDirectedGraph/)
+[![.NET Core](https://github.com/DevelApp-ai/DoubleLinkedDirectedGraph/actions/workflows/dotnet-core.yml/badge.svg)](https://github.com/DevelApp-ai/DoubleLinkedDirectedGraph/actions/workflows/dotnet-core.yml)
+[![License](https://img.shields.io/github/license/DevelApp-ai/DoubleLinkedDirectedGraph)](LICENSE)
 
 A generic double linked directed graph where edges can carry information optimized for stepping through.
 
