@@ -15,6 +15,7 @@ namespace DoubleLinkedDirectedGraph
 
         public const string START_NODE_KEY = "START";
         public const string END_NODE_KEY = "END";
+        private static readonly char[] NodeKeyInvalidChars = new[] { ' ', '-', '_' };
         private readonly Dictionary<string, Node> nodes = new Dictionary<string, Node>();
         private bool graphLocked = false;
         private Node _startNode;
@@ -138,7 +139,7 @@ namespace DoubleLinkedDirectedGraph
             }
             
             // Only process if needed
-            if (nodeKey.IndexOfAny(new[] { ' ', '-', '_' }) >= 0)
+            if (nodeKey.IndexOfAny(NodeKeyInvalidChars) >= 0)
             {
                 return nodeKey.Replace(" ", "").Replace("-", "").Replace("_", "");
             }
