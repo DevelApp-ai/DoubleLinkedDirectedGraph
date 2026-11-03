@@ -39,7 +39,6 @@ jobs:
         reporter: dotnet-trx
     - name: Publish NuGet Package
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: brandedoutcast/publish-nuget@v2.5.2
-      with:
-          PROJECT_FILE_PATH: DoubleLinkedDirectedGraph/DoubleLinkedDirectedGraph.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      run: |
+        dotnet pack DoubleLinkedDirectedGraph/DoubleLinkedDirectedGraph.csproj --configuration Release --output nupkgs
+        dotnet nuget push "nupkgs/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
